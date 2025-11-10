@@ -9,6 +9,7 @@ AI-powered image generation for Sanity Studio using Google's Gemini 2.5 Flash Im
 ## Features
 
 ### Single Image Generation
+
 - **Text-to-Image Generation**: Create images from descriptive prompts
 - **Image-to-Image Editing**: Upload photos and generate AI-powered variations
   - Change backgrounds (studio, outdoor, luxury, lifestyle)
@@ -19,6 +20,7 @@ AI-powered image generation for Sanity Studio using Google's Gemini 2.5 Flash Im
 - **Prompt Builder**: Guided interface for constructing effective prompts
 
 ### NEW: Image Series Generation
+
 - **Batch Generation**: Generate 2-10 images in a single request with visual consistency
 - **Congruent Variations**: Maintain consistent style across all images while varying specific elements
 - **Variation Types**:
@@ -32,6 +34,7 @@ AI-powered image generation for Sanity Studio using Google's Gemini 2.5 Flash Im
 - **Selective Upload**: Choose which images from the series to save
 
 ### Core Features
+
 - **Seamless Integration**: Appears directly in Sanity Studio's image picker alongside Upload, Unsplash, etc.
 - **Multiple Aspect Ratios**: Support for 1:1, 16:9, 9:16, 4:3, 3:2, and more
 - **Direct Sanity Upload**: Generated images automatically uploaded to Sanity assets
@@ -40,14 +43,20 @@ AI-powered image generation for Sanity Studio using Google's Gemini 2.5 Flash Im
 
 ## Screenshots
 
+![AI Generator Studio in Sanity Studio](img/image-studio-1.png)
+_AI Generator Studio operates as a stand alone tool_
+
+![AI Generator Series Tool in Sanity Studio](img/image-studio-2.png)
+_AI Generator Studio offers Image Series to generate multiple images in a series and operates as a stand alone tool_
+
 ![AI Generator in Sanity Studio](img/studio-1.png)
-*AI Generator appears directly in the image picker alongside other sources*
+_AI Generator appears directly in the image picker alongside other sources_
 
 ![Text-to-Image Generation](img/studio-2.png)
-*Generate images from text prompts with templates and aspect ratio options*
+_Generate images from text prompts with templates and aspect ratio options_
 
 ![Image-to-Image Editing](img/studio-3.png)
-*Upload and edit existing images with AI-powered modifications*
+_Upload and edit existing images with AI-powered modifications_
 
 ## Quick Start (Next.js)
 
@@ -83,6 +92,7 @@ export { POST };
 ```
 
 **CORS Configuration:**
+
 - If your Sanity Studio is integrated with your Next.js app (e.g., `/studio` route), CORS is **not needed**
 - If your Sanity Studio is hosted elsewhere (e.g., `studio.yoursite.com` or Sanity Cloud), you **must enable CORS** for this route:
 
@@ -94,9 +104,12 @@ export async function POST(request: Request) {
   const response = await GeminiPOST(request);
 
   // Add CORS headers for external Studio
-  response.headers.set('Access-Control-Allow-Origin', 'https://your-studio-domain.com');
-  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  response.headers.set(
+    "Access-Control-Allow-Origin",
+    "https://your-studio-domain.com"
+  );
+  response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
 
   return response;
 }
@@ -105,9 +118,9 @@ export async function OPTIONS() {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://your-studio-domain.com',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      "Access-Control-Allow-Origin": "https://your-studio-domain.com",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
     },
   });
 }
@@ -247,6 +260,7 @@ Generate multiple congruent images in one request:
 ```
 
 **Use Cases:**
+
 - Product photography: Same product from different angles
 - Marketing assets: Consistent brand imagery with variations
 - A/B testing: Multiple options maintaining design language
@@ -270,6 +284,7 @@ export default defineConfig({
 ```
 
 Access via the sidebar "AI Image Studio" tool for:
+
 - Bulk image generation sessions
 - Generation history
 - Workspace for creative exploration

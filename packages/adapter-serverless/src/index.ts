@@ -203,7 +203,19 @@ export async function handler(
         )
       }
 
-      if (quantity < 2 || quantity > 10) {
+      const parsedQuantity = Number(quantity)
+
+      if (!Number.isFinite(parsedQuantity)) {
+        return new Response(
+          JSON.stringify({error: 'Quantity must be a number between 2 and 10'}),
+          {
+            status: 400,
+            headers: {'Content-Type': 'application/json'},
+          }
+        )
+      }
+
+      if (parsedQuantity < 2 || parsedQuantity > 10) {
         return new Response(
           JSON.stringify({error: 'Quantity must be between 2 and 10'}),
           {
@@ -217,7 +229,8 @@ export async function handler(
       const errors: Array<{index: number; variation: string; error: string}> = []
 
       // Generate images in parallel
-      const promises = variations.slice(0, quantity).map(async (variation, index) => {
+      const cappedVariations = variations.slice(0, parsedQuantity)
+      const promises = cappedVariations.map(async (variation, index) => {
         try {
           const fullPrompt = `${prompt} ${consistencyPrompt} Variation: ${variation}`
           const result = await generateSingleImage(client, fullPrompt, aspectRatio, mode, baseImage)
@@ -261,7 +274,7 @@ export async function handler(
           basePrompt: prompt,
           stylePrompt: consistencyPrompt,
           generatedAt: new Date().toISOString(),
-          quantity,
+          quantity: parsedQuantity,
           successful: images.length,
           failed: errors.length,
         },

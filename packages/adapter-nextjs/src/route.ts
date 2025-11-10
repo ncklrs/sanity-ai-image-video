@@ -109,7 +109,13 @@ export async function POST(request: Request) {
         return NextResponse.json({error: 'Variations are required for series generation'}, {status: 400})
       }
 
-      if (quantity < 2 || quantity > 10) {
+      const parsedQuantity = Number(quantity)
+
+      if (!Number.isFinite(parsedQuantity)) {
+        return NextResponse.json({error: 'Quantity must be a number between 2 and 10'}, {status: 400})
+      }
+
+      if (parsedQuantity < 2 || parsedQuantity > 10) {
         return NextResponse.json({error: 'Quantity must be between 2 and 10'}, {status: 400})
       }
 
@@ -163,11 +169,12 @@ export async function POST(request: Request) {
 
       // Generate sequentially to ensure consistency (especially with reference images)
       const results: any[] = []
-      for (let i = 0; i < Math.min(variations.length, quantity); i++) {
-        const result = await generateImage(variations[i], i)
+      const cappedVariations = variations.slice(0, parsedQuantity)
+      for (let i = 0; i < cappedVariations.length; i++) {
+        const result = await generateImage(cappedVariations[i], i)
         results.push(result)
         // Small delay between generations to avoid rate limiting
-        if (i < Math.min(variations.length, quantity) - 1) {
+        if (i < cappedVariations.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 500))
         }
       }
@@ -195,7 +202,7 @@ export async function POST(request: Request) {
               basePrompt: prompt,
               stylePrompt: consistencyPrompt,
               generatedAt: new Date().toISOString(),
-              quantity,
+              quantity: parsedQuantity,
               successful: images.length,
               failed: errors.length,
             },
@@ -213,7 +220,7 @@ export async function POST(request: Request) {
           basePrompt: prompt,
           stylePrompt: consistencyPrompt,
           generatedAt: new Date().toISOString(),
-          quantity,
+          quantity: parsedQuantity,
           successful: images.length,
           failed: 0,
         },

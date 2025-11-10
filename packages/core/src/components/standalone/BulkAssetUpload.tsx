@@ -1,5 +1,5 @@
 import {Box, Button, Card, Checkbox, Flex, Grid, Label, Stack, Text} from '@sanity/ui'
-import {useCallback, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import type {SeriesImageResult} from '../../types.js'
 import {useBatchUpload} from '../../hooks/useBatchUpload.js'
 
@@ -18,6 +18,11 @@ export function BulkAssetUpload({images, metadata, onUploadComplete}: BulkAssetU
     new Set(images.map((_, i) => i)),
   )
   const {uploadBatch, uploading, uploadProgress, errors} = useBatchUpload()
+
+  // Resync selected indices when images array changes
+  useEffect(() => {
+    setSelectedIndices(new Set(images.map((_, i) => i)))
+  }, [images])
 
   const handleToggleSelection = useCallback((index: number) => {
     setSelectedIndices((current) => {
